@@ -3,6 +3,9 @@
         <button @click="redirectCreate" class="btn">アルコリズムを作成する</button>
         <br>
         <button @click="redirectHistory" class="btn">履歴をみる</button>
+
+        <!-- GoogleMapsのデモ表示 -->
+        <google-maps-demo />
     </div>
 </template>
 

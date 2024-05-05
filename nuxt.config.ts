@@ -14,6 +14,16 @@ export default defineNuxtConfig({
       }
     }
   },
+  app: {
+    head: {
+      title: "nuxt3-google-map",
+      script: [
+        {
+          src: 'https://unpkg.com/vue3-google-map',
+        }
+      ]
+    }
+  },
   pwa: {
     registerType: "autoUpdate",
     manifest: {
