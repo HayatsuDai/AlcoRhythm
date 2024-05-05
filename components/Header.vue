@@ -1,29 +1,31 @@
 <template>
-    <header id="header" class="header">
-        <nav class="header-color">
-            <div class="container">
-                <a class="item">デフォルトヘッダー</a>
-            </div>
-        </nav>
-    </header>
+    <div class="header">
+        <router-link to="/app-top" class="header">
+            <p class="header-title">アルコリズム</p>
+        </router-link>
+        <p class="header-user">ユーザー１</p>
+    </div>
 </template>
 
-<style scoped>
-.header-color {
-    background-color: #CC9900;
-}
+<script setup lang="ts"></script>
 
-.container {
-    display: flex;
-    color: #ffffff;
+<style scoped>
+.header {
+    top: 0;
+    height: 58px;
+    box-shadow: 0px 3px 3px 0px #bababa80;
+    width: 100%;
+    background-color: #E6BF00;
+    text-decoration: none;
+}
+.header-title {
+    float: left;
+    padding: 1.30rem;
     font-weight: bold;
 }
-
-.container .item {
-    padding: 20px 10px;
-}
-
-.container > div:last-of-type {
-    margin-left: auto;
+.header-user {
+    float: right;
+    padding: 1.30rem;
+    font-weight: bold;
 }
 </style>
