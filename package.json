@@ -7,13 +7,19 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "format": "eslint --fix . "
   },
   "dependencies": {
+    "@vite-pwa/assets-generator": "^0.2.4",
+    "@vite-pwa/nuxt": "^0.6.0",
     "nuxt": "^3.11.2",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
-    "@vite-pwa/assets-generator": "^0.2.4",
-    "@vite-pwa/nuxt": "^0.6.0"
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^0.3.10",
+    "eslint": "^8.57.0"
   }
 }
