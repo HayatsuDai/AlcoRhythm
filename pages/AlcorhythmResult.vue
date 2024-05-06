@@ -6,7 +6,7 @@
         開始時刻：{{ startTime }}<br>
         終了時刻：{{ progressTime }}<br>
         <ul id="sample">
-          <li v-for="item in latLng" :key="item.index">
+          <li v-for="(item, index) in latLng" :key="index">
             lat:{{ item.lat }}, lng{{ item.lng }}
           </li>
         </ul>
@@ -46,17 +46,37 @@
 //   default: '--:--:--'
 // };
 
-// TODO: いまはrouter機能でデータ渡してるが、データ格納はDBとかvuexに委ねたい
+const latLng = [
+  {
+    lat: 0,
+    lng: 0,
+  },
+  {
+    lat: 0,
+    lng: 0,
+  },
+]
+const title = '';
+const message = '';
+const startTime = '';
+const progressTime = '';
+
+
 const viewsAppHistoryDetail = () => {
-  Router.push({
-    name: 'AppHistoryDetail',
-    params: {
-      latLng: this.latLng,
-      title: this.title,
-      message: this.message,
-      startTime: this.startTime,
-      progressTime: this.progressTime,
-    }
-  });
+  // 処理
 };
+
+// TODO: いまはrouter機能でデータ渡してるが、データ格納はDBとかvuexに委ねたい
+// const viewsAppHistoryDetail = () => {
+//   Router.push({
+//     name: 'AppHistoryDetail',
+//     params: {
+//       latLng: this.latLng,
+//       title: this.title,
+//       message: this.message,
+//       startTime: this.startTime,
+//       progressTime: this.progressTime,
+//     }
+//   });
+// };
 </script>

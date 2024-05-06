@@ -65,7 +65,7 @@ const viewsAppHistory = () => {
   Router.push({
     name: 'AppHistory'
   });
-},
+};
 const viewsAppTop = () => {
   Router.push({
     name: 'AppTop'

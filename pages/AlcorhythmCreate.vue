@@ -18,6 +18,10 @@ import { ref, reactive, computed } from 'vue';
 const title = '';
 const message = '';
 const startTime = 0;
+
+const viewsAppAlcorhythm = () => {
+  // 処理
+};
 </script>
 
 <style scoped>

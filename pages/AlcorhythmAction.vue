@@ -40,64 +40,98 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
 
+let title = 'title';
+let message = 'message';
 let documentId = 'dummyDocumentId';
 let latLng = [];
 let startTime = '00:00:00';
 let finishTime = '00:00:00';
 let progressTime = '00:00:00';
-let timerIdForProgressTime = '';
-let timerIdForLatLng = '';
+let timerIdForProgressTime = 0;
+let timerIdForLatLng = 0;
 let countSeven = 0;
 let countFamima = 0;
 let countLawson = 0;
 
-onMounted(() => {
-    init();
-    // 経過時間の格納
-    timerIdForProgressTime = setInterval(setProgressTime, 500);
-    // 緯度経度情報の格納(60秒/回)
-    timerIdForLatLng = setInterval(setLatLng, 6000);
-})
+// onMounted(() => {
+//     init();
+//     // 経過時間の格納
+//     timerIdForProgressTime = setInterval(setProgressTime, 500);
+//     // 緯度経度情報の格納(60秒/回)
+//     timerIdForLatLng = setInterval(setLatLng, 6000);
+// });
 
 const init = () => {
   console.log('init');
   const date = new Date();
   startTime = date.toLocaleTimeString('en-GB');
   progressTime = date.toLocaleTimeString('en-GB');
-  setLatLng();// 初期位置を取得
+  // setLatLng();// 初期位置を取得
 };
 const finish = () => {
   console.log('finish');
   const date = new Date();
   finishTime = date.toLocaleTimeString('en-GB');
 
-  setLatLng();// 最終位置を取得
+  // setLatLng();// 最終位置を取得
   // this.setAlcorhythm(); // TODO: firebase実装とともにコメント外す
 };
 const setProgressTime = () => {
   const date = new Date();
   progressTime = date.toLocaleTimeString('en-GB');
 };
-const setLatLng = () => {
-  console.log('latlng');
-  navigator.geolocation.getCurrentPosition(
-    success,
-    fail
-  );
-};
-const success = (position) => {
-  console.log(position.coords.latitude);
-  console.log(position.coords.longitude);
-  latLng.push(
-    {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    }
-  );
-};
-const fail = (error) => {
-  window.alert('位置情報の取得に失敗しました。エラーコード：' + error.code);
-};
+
+// 不要かもしれん
+// const setLatLng = () => {
+//   console.log('latlng');
+//   navigator.geolocation.getCurrentPosition(
+//     success,
+//     fail
+//   );
+// };
+
+// onMounted(() => {
+//   const position = await getPosition()
+//     .then((position) => {
+//       return {
+//         latitude: position.coords.latitude,
+//         longitude: position.coords.longitude
+//       }
+//     })
+//     .catch((err) => {
+//       console.error(err.message)
+//     });
+
+//     latLng.push(
+//       {
+//         lat: position.latitude,
+//         lng: position.longitude
+//       }
+//     );
+// });
+
+
+
+// const getPosition = (options) => {
+//   return new Promise(function(resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(resolve, reject, options)
+//   })
+// };
+
+// 不要かもしれん
+// const success = (position) => {
+//   console.log(position.coords.latitude);
+//   console.log(position.coords.longitude);
+//   latLng.push(
+//     {
+//       lat: position.coords.latitude,
+//       lng: position.coords.longitude
+//     }
+//   );
+// };
+// const fail = (error) => {
+//   window.alert('位置情報の取得に失敗しました。エラーコード：' + error.code);
+// };
 
 // async setAlcorhythm() {
 //   // TODO: cloud firebaseにデータをブチ込む
