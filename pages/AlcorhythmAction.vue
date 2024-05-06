@@ -2,6 +2,7 @@
   <div class="app">
       <section class="contents">
         <div class="info">
+          <div class="id">{{ alcorhythmId }}</div>
           <div class="title">{{ title }}</div>
           <div class="message">{{ message }}</div>
         </div>
@@ -20,26 +21,30 @@
         <div class="convenience">
           <div class="seven">
             <div>{{ countSeven }}</div>
-            <img src="../../public/img/icons/seven_eleven.png">
+            <img src="/icons/seven_eleven.png">
           </div>
           <div class="famima">
             <div>{{ countFamima }}</div>
-            <img src="../../public/img/icons/familymart.png">
+            <img src="/icons/familymart.png">
           </div>
           <div class="lawson">
             <div>{{ countLawson }}</div>
-            <img src="../../public/img/icons/lawson.png">
+            <img src="/icons/lawson.png">
           </div>
         </div>
-        <button class="btn" @click="viewsAppAlcorhythmResult">アルコリズムを終了する</button>
-        <button class="btn" @click="debugFinish" style="background-color: #65e36f;">debug終了</button>
+        <button class="btn" @click="navigateToResult">アルコリズムを終了する</button>
+        <!-- <button class="btn" @click="navigateToResult" style="background-color: #65e36f;">debug終了</button> -->
       </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
+definePageMeta({
+  path: "/action"
+});
 
+const alcorhythmId = useRoute().query.alcorhythmId;
 let title = 'title';
 let message = 'message';
 let documentId = 'dummyDocumentId';
@@ -75,7 +80,18 @@ const finish = () => {
 
   // setLatLng();// 最終位置を取得
   // this.setAlcorhythm(); // TODO: firebase実装とともにコメント外す
+  return navigateToResult();
 };
+
+const navigateToResult = () => {
+  return navigateTo({
+    path: '/result',
+    query: {
+      alcorhythmId: alcorhythmId
+    }
+  });
+};
+
 const setProgressTime = () => {
   const date = new Date();
   progressTime = date.toLocaleTimeString('en-GB');

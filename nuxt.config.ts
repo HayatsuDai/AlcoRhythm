@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "nuxt3-google-map",
+      title: "アルコリズム",
       script: [
         {
           src: 'https://unpkg.com/vue3-google-map',

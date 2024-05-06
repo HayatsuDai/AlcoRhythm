@@ -1,10 +1,13 @@
 <template>
-  <div class="app">
-      <app-header/>
+  <div>
       <section class="contents">
-        <router-link to="/app-top">トップ画面に戻る</router-link>
+        <a href="/top">トップ画面に戻る</a>
       </section>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+  path: "/history"
+});
+</script>

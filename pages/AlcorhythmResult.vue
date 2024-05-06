@@ -11,14 +11,58 @@
           </li>
         </ul>
         <br>
-        <a @click="viewsAppHistoryDetail">詳細の履歴をみる</a>
+        <button class="btn" @click="navigateToHistoryDetail">詳細の履歴をみる</button>
         <br>
-        <router-link to="/app-top">トップに戻る</router-link>
+        <button class="btn" @click="navigateToTop">トップに戻る</button>
       </section>
   </div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  path: "/result"
+});
+
+const navigateToHistoryDetail = () => {
+  return navigateTo({
+    path: '/history-detail',
+    query: {
+      alcorhythmId: alcorhythmId
+    }
+  });
+};
+
+const navigateToTop = () => {
+  return navigateTo({
+    path: '/top'
+  });
+};
+
+const alcorhythmId = useRoute().query.alcorhythmId;
+console.log('alcorhythmId: ' + alcorhythmId);
+const latLng = [
+  {
+    lat: 0,
+    lng: 0,
+  },
+  {
+    lat: 0,
+    lng: 0,
+  },
+]
+const title = '';
+const message = '';
+const startTime = '';
+const progressTime = '';
+
+// const navigateToHistoryDetail = () => {
+//   return navigateTo({
+//     path: '/history-detail',
+//     query: {
+//       alcorhythmId: 0 // TODO: IDを受け取りたい
+//     }
+//   });
+// };
 
 // latLng : {
 //   type: Array,
@@ -46,26 +90,6 @@
 //   default: '--:--:--'
 // };
 
-const latLng = [
-  {
-    lat: 0,
-    lng: 0,
-  },
-  {
-    lat: 0,
-    lng: 0,
-  },
-]
-const title = '';
-const message = '';
-const startTime = '';
-const progressTime = '';
-
-
-const viewsAppHistoryDetail = () => {
-  // 処理
-};
-
 // TODO: いまはrouter機能でデータ渡してるが、データ格納はDBとかvuexに委ねたい
 // const viewsAppHistoryDetail = () => {
 //   Router.push({
@@ -80,3 +104,16 @@ const viewsAppHistoryDetail = () => {
 //   });
 // };
 </script>
+
+<style scoped>
+.btn {
+  background-color: #FFF15F;
+  width: 300px;
+  margin: 20px 30px;
+  padding: 10px 0px ;
+  color: #212529;
+  font-size: 18px;
+  border-radius: 0.5rem;
+  border-radius: 100vh;
+}
+</style>

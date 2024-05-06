@@ -1,7 +1,7 @@
 <template>
     <div class="header">
-        <router-link to="/app-top" class="header">
-            <p class="header-title">アルコリズム</p>
+        <router-link to="/top" class="header">
+            <img src="/icons/歩くジョッキ君_透過.png" class="img">
         </router-link>
         <p class="header-user">ユーザー１</p>
     </div>
@@ -27,5 +27,12 @@
     float: right;
     padding: 1.30rem;
     font-weight: bold;
+}
+a {
+    display: flex;
+    justify-content: flex-start;
+}
+.img {
+    margin: 5px 5px 5px 10px;
 }
 </style>

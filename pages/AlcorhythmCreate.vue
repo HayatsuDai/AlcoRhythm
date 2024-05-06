@@ -1,26 +1,39 @@
 <template>
   <div class="app">
-      <app-header/>
       <section class="contents">
         <h1>アルコリズムを作成</h1>
         <h2>タイトルを入力する（必須）</h2>
         <input type="text" v-model="title">
         <h2>メッセージを入力する</h2>
         <input type="text" class="text-area" v-model="message">
-        <button class="btn" @click="viewsAppAlcorhythm">アルコリズムを開始する</button>
+        <button class="btn" @click="navigateToAction">アルコリズムを開始する</button>
       </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
+definePageMeta({
+  path: "/create"
+});
 
 const title = '';
 const message = '';
 const startTime = 0;
 
-const viewsAppAlcorhythm = () => {
-  // 処理
+let alcorhythmId = 0;
+const createAlcorhythm = () => {
+  // IndexedDBでadd
+  alcorhythmId = 1;
+};
+
+const navigateToAction = () => {
+  return navigateTo({
+    path: '/action',
+    query: {
+      alcorhythmId: alcorhythmId
+    }
+  });
 };
 </script>
 

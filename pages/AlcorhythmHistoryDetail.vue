@@ -1,39 +1,61 @@
 <template>
   <div class="app">
-      <section class="contents">
-        <div class="info">
-          <div class="title">{{ title }}</div>
-          <div class="message">{{ message }}</div>
-        </div>
-        <div class="hr-contents">
-          <p class="hr-title">歩いた軌跡</p>
-          <hr>
-        </div>
-        <google-maps
-          :lat-lng="latLng"
-          class="gmap"
-        />
-        <div class="hr-contents">
-          <p class="hr-title">タイム</p>
-          <hr>
-        </div>
-        <div>
-          開始時刻：{{ startTime }}<br>
-          終了時刻：{{ progressTime }}<br>
-        </div>
-        <ul id="sample">
-          <li v-for="item in latLng" :key="item.index">
-            lat:{{ item.lat }}, lng{{ item.lng }}
-          </li>
-        </ul>
-      </section>
-        <button class="btn" @click="viewsAppHistory">履歴一覧に戻る</button>
-        <button class="btn" @click="viewsAppTop">トップ画面に戻る</button>
+    <section class="contents">
+      <div class="info">
+        <div class="title">{{ title }}</div>
+        <div class="message">{{ message }}</div>
+      </div>
+      <div class="hr-contents">
+        <p class="hr-title">歩いた軌跡</p>
+        <hr>
+      </div>
+      <!-- <google-maps
+        :lat-lng="latLng"
+        class="gmap"
+      /> -->
+      <div class="hr-contents">
+        <p class="hr-title">タイム</p>
+        <hr>
+      </div>
+      <div>
+        開始時刻：{{ startTime }}<br>
+        終了時刻：{{ progressTime }}<br>
+      </div>
+      <ul id="sample">
+        <li v-for="item in latLng" :key="item.index">
+          lat:{{ item.lat }}, lng{{ item.lng }}
+        </li>
+      </ul>
+    </section>
+    <a href="/history">履歴一覧に戻る</a>
+    <br>
+    <a href="/top">トップ画面に戻る</a>
   </div>
 </template>
 
-<script>
-// props: {
+<script setup lang="ts">
+definePageMeta({
+  path: "/history-detail"
+});
+
+const alcorhythmId = useRoute().query.alcorhythmId;
+console.log('alcorhythmId: ' + alcorhythmId);
+
+const latLng = [
+  {
+    lat: 0,
+    lng: 0,
+  },
+  {
+    lat: 0,
+    lng: 0,
+  },
+]
+const title = '';
+const message = '';
+const startTime = '';
+const progressTime = '';
+
 //   latLng : {
 //     type: Array,
 //     default: () => {},
@@ -60,17 +82,6 @@
 //     default: '--:--:--'
 //   }
 // };
-
-const viewsAppHistory = () => {
-  Router.push({
-    name: 'AppHistory'
-  });
-};
-const viewsAppTop = () => {
-  Router.push({
-    name: 'AppTop'
-  });
-};
 </script>
 
 <style scoped>
