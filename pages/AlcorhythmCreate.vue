@@ -3,9 +3,9 @@
       <section class="contents">
         <h1>アルコリズムを作成</h1>
         <h2>タイトルを入力する（必須）</h2>
-        <input type="text" v-model="title">
+        <input type="text" v-model="alcorhythm.title">
         <h2>メッセージを入力する</h2>
-        <input type="text" class="text-area" v-model="message">
+        <input type="text" class="text-area" v-model="alcorhythm.description">
         <button class="btn" @click="navigateToAction">アルコリズムを開始する</button>
       </section>
   </div>
@@ -13,27 +13,50 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
+import type { IAlcorhythm } from '~/types/IAlcorhythm';
 definePageMeta({
-  path: "/create"
+  path: "/create",
 });
 
-const title = '';
-const message = '';
-const startTime = 0;
-
-let alcorhythmId = 0;
-const createAlcorhythm = () => {
-  // IndexedDBでadd
-  alcorhythmId = 1;
-};
-
+const alcorhythm: IAlcorhythm = reactive({
+    title: 'テスト title アルコリズム',
+    description: 'テスト description メッセージ',
+    latlng: [],
+    count: {
+      seveneleven: 0,
+      lowson: 0,
+      familymart: 0,
+    },
+    start_date: null,
+    end_date: null,
+});
 const navigateToAction = () => {
+  // TODO: 現場の情報のみでindexeddb.createRecordをawaitで実行し、idを取得する
+  // alcorhythmId = createRecord(// alcorhythm);
+  alcorhythm.start_date = generateDate();
+  createRecord(alcorhythm);
+  const alcorhythmId = 1;
+
+  console.log('--- create alcorhythm var ---');
+  console.log(alcorhythm);
+  alert('go?');
   return navigateTo({
     path: '/action',
     query: {
       alcorhythmId: alcorhythmId
     }
   });
+};
+
+const generateDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const date = today.getDate();
+  const hour = today.getHours();
+  const minutes = today.getMinutes();
+  const seconds = today.getSeconds();
+  return `${year}/${month}/${date} ${hour}:${minutes}:${seconds}`;
 };
 </script>
 
