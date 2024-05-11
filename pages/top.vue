@@ -2,6 +2,7 @@
     <div>
         <a href="/create" class="link">アルコリズムを作成する</a>
         <a href="/history" class="link">履歴をみる</a>
+        <a href="/debug" class="link">Debug画面</a>
 
         <!-- GoogleMapsのデモ表示 -->
         <!-- <google-maps-demo /> -->
