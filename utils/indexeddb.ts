@@ -1,5 +1,9 @@
 import { type IAlcorhythm } from "~/types/IAlcorhythm";
 
+const dbName = 'AlcorhythmDB'
+const tableName = 'Alcorhythm';
+const version = 1;
+
 /**
  * putを利用するため、keyに対してcreateOrUpdateが実行される
  * @param alcorhythm
@@ -7,11 +11,7 @@ import { type IAlcorhythm } from "~/types/IAlcorhythm";
  */
 export function createRecord(alcorhythm: IAlcorhythm): void {
     // TODO: なんかうまくいかんわ。。。
-    const dbName = 'AlcorhythmDB'
-    const tableName = 'Alcorhythm';
-    const version = 1;
     const request = indexedDB.open(dbName, version);
-    var key: number;
 
     request.onerror = () => {
         console.log('IndexedDB can not open for create');
@@ -26,6 +26,20 @@ export function createRecord(alcorhythm: IAlcorhythm): void {
             key = objectStoreRequest.result;
             // TODO: keyが生成されたら返却したい。awaitとかで処理待ちする？
         }
+    }
+}
+
+/** 新規作成or更新 */
+export function updateOrCreate(obj: object): void {
+    const request = indexedDB.open(dbName, version);
+    request.onerror = () => {
+        alert('IndexedDB can not open for updateOrCreate');
+    }
+    request.onsuccess = () => {
+        const db = request.result;
+        const transaction = db.transaction(tableName, 'readwrite');
+        const objectStore = transaction.objectStore(tableName);
+        objectStore.put(obj);
     }
 }
 

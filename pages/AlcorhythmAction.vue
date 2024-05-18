@@ -3,36 +3,45 @@
       <section class="contents">
         <div class="info">
           <div class="id">{{ alcorhythmId }}</div>
-          <div class="title">{{ title }}</div>
-          <div class="message">{{ message }}</div>
+          <div class="title">{{ alcorhythm.title }}</div>
+          <div class="description">{{ alcorhythm.description }}</div>
         </div>
         <hr>
         <div class="time-block">
           <div class="timer">
             <p>開始</p>
-            {{ startTime }}<br>
+            {{ alcorhythm.start_time }}<br>
           </div>
           <div class="timer">
             <p>経過</p>
-            {{ progressTime }}<br>
+            {{ currentTime }}<br>
           </div>
         </div>
         <hr>
         <div class="convenience">
-          <div class="seven">
-            <div>{{ countSeven }}</div>
-            <img src="/icons/seven_eleven.png">
+          <div class="icon" @click="incrementCounter('seveneleven')">
+            <div>{{ alcorhythm.count.seveneleven }}</div>
+            <img src="/icons/seveneleven.png">
           </div>
-          <div class="famima">
-            <div>{{ countFamima }}</div>
+          <div @click="decrementCounter('seveneleven')">
+            <img src="/icons/minus_button.png" alt="minus_button">
+          </div>
+          <div class="icon" @click="incrementCounter('familymart')">
+            <div>{{ alcorhythm.count.familymart }}</div>
             <img src="/icons/familymart.png">
           </div>
-          <div class="lawson">
-            <div>{{ countLawson }}</div>
+            <div @click="decrementCounter('familymart')">
+              <img src="/icons/minus_button.png" alt="minus_button">
+            </div>
+          <div class="icon" @click="incrementCounter('lawson')">
+            <div>{{ alcorhythm.count.lawson }}</div>
             <img src="/icons/lawson.png">
           </div>
+          <div @click="decrementCounter('lawson')">
+            <img src="/icons/minus_button.png" alt="minus_button">
+          </div>
         </div>
-        <button class="btn" @click="navigateToResult">アルコリズムを終了する</button>
+        <button class="btn" @click="finish">アルコリズムを終了する</button>
         <!-- <button class="btn" @click="navigateToResult" style="background-color: #65e36f;">debug終了</button> -->
       </section>
   </div>
@@ -40,49 +49,11 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
+import type { IAlcorhythm, latlng } from '~/types/IAlcorhythm';
+import { updateOrCreate } from '~/utils/indexeddb';
 definePageMeta({
   path: "/action"
 });
-
-const alcorhythmId = useRoute().query.alcorhythmId;
-let title = 'title';
-let message = 'message';
-let documentId = 'dummyDocumentId';
-let latLng = [];
-let startTime = '00:00:00';
-let finishTime = '00:00:00';
-let progressTime = '00:00:00';
-let timerIdForProgressTime = 0;
-let timerIdForLatLng = 0;
-let countSeven = 0;
-let countFamima = 0;
-let countLawson = 0;
-
-// onMounted(() => {
-//     init();
-//     // 経過時間の格納
-//     timerIdForProgressTime = setInterval(setProgressTime, 500);
-//     // 緯度経度情報の格納(60秒/回)
-//     timerIdForLatLng = setInterval(setLatLng, 6000);
-// });
-
-const init = () => {
-  console.log('init');
-  const date = new Date();
-  startTime = date.toLocaleTimeString('en-GB');
-  progressTime = date.toLocaleTimeString('en-GB');
-  // setLatLng();// 初期位置を取得
-};
-const finish = () => {
-  console.log('finish');
-  const date = new Date();
-  finishTime = date.toLocaleTimeString('en-GB');
-
-  // setLatLng();// 最終位置を取得
-  // this.setAlcorhythm(); // TODO: firebase実装とともにコメント外す
-  return navigateToResult();
-};
-
 const navigateToResult = () => {
   return navigateTo({
     path: '/result',
@@ -92,128 +63,102 @@ const navigateToResult = () => {
   });
 };
 
-const setProgressTime = () => {
+const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
+const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
+
+/** 画面内の値 */
+let currentTime = ref<string>('');
+let currentTimerId: NodeJS.Timeout;
+let progressLatLngTimerId: NodeJS.Timeout;
+onMounted(() => {
+  console.log('init');
+  // 経過時間の格納
+  currentTimerId = setInterval(setCurrentTime, 1000);
+  // 緯度経度情報の格納(60秒/回)
+  progressLatLngTimerId = setInterval(setLatLng, 60000);
+});
+
+/** 現在時刻タイマー */
+const setCurrentTime = () => {
   const date = new Date();
-  progressTime = date.toLocaleTimeString('en-GB');
+  currentTime.value = date.toLocaleTimeString('en-GB');
 };
 
-// 不要かもしれん
-// const setLatLng = () => {
-//   console.log('latlng');
-//   navigator.geolocation.getCurrentPosition(
-//     success,
-//     fail
-//   );
-// };
+const latlng = ref<latlng[]>([]);
+/** アルコリズムObjectに緯度経度を格納 */
+const setLatLng = async () => {
+  if (!navigator.geolocation) {
+    // TODO: sw.jsでオフライン時の挙動を担保したい
+    alert('緯度経度が取得できませんでした');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition((pos) => {
+    latlng.value.push({
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude
+    });
+  }, (error) => {
+    console.error(error);
+  });
+};
 
-// onMounted(() => {
-//   const position = await getPosition()
-//     .then((position) => {
-//       return {
-//         latitude: position.coords.latitude,
-//         longitude: position.coords.longitude
-//       }
-//     })
-//     .catch((err) => {
-//       console.error(err.message)
-//     });
+/** アルコリズム終了時処理 */
+const finish = () => {
+  const confirmMsg = 'アルコリズムを終了しますか？';
+  if (!confirm(confirmMsg)) {
+    // TODO: 画面離脱時にも処理を呼び出す必要がある
+    return;
+  }
 
-//     latLng.push(
-//       {
-//         lat: position.latitude,
-//         lng: position.longitude
-//       }
-//     );
-// });
+  console.log('finish');
+  // timer停止
+  clearInterval(currentTimerId);
+  clearInterval(progressLatLngTimerId);
 
+  const date = new Date();
+  alcorhythm.end_date = date.toLocaleTimeString('en-GB');
+  alcorhythm.end_time = currentTime;
 
+  setLatLng(); // 最終位置を取得
+  alcorhythm.latlng = latlng.value;
+  updateOrCreate(alcorhythm); // アルコリズムの保存
 
-// const getPosition = (options) => {
-//   return new Promise(function(resolve, reject) {
-//     navigator.geolocation.getCurrentPosition(resolve, reject, options)
-//   })
-// };
+  return navigateToResult();
+};
+/** カウンター加算 */
+const incrementCounter = (counterTarget: string) => {
+  switch (counterTarget) {
+    case 'seveneleven':
+      ++alcorhythm.count.seveneleven;
+      break;
+    case 'familymart':
+      ++alcorhythm.count.familymart;
+      break;
+    case 'lawson':
+      ++alcorhythm.count.lawson;
+      break;
+    defalut:
+      alert('incrementCounter unreachable code');
+      break;
+    }
+};
 
-// 不要かもしれん
-// const success = (position) => {
-//   console.log(position.coords.latitude);
-//   console.log(position.coords.longitude);
-//   latLng.push(
-//     {
-//       lat: position.coords.latitude,
-//       lng: position.coords.longitude
-//     }
-//   );
-// };
-// const fail = (error) => {
-//   window.alert('位置情報の取得に失敗しました。エラーコード：' + error.code);
-// };
-
-// async setAlcorhythm() {
-//   // TODO: cloud firebaseにデータをブチ込む
-//   // https://qiita.com/subaru44k/items/a88e638333b8d5cc29f2
-//   // Add a new document with a generated id.
-//   try {
-//     // 省略
-//     // (Cloud Firestoreのインスタンスを初期化してdbにセット)
-
-//     const userRef = await db.collection('users').add({
-//       name: {
-//         first: 'tarou',
-//         last: 'yamada',
-//       },
-//       score: 80,
-//       birthday: firebase.firestore.Timestamp.fromDate(new Date(1980, 10, 15)),
-//       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-//       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-//     })
-
-//     const userDoc = await userRef.get()
-//     console.log(userDoc.data())
-//     // 出力例
-//     // { birthday: Timestamp { seconds: 343062000, nanoseconds: 0 },
-//     //   createdAt: Timestamp { seconds: 1571747519, nanoseconds: 521000000 },
-//     //   name: { first: 'tarou', last: 'yamada' },
-//     //   score: 80,
-//     //   updatedAt: Timestamp { seconds: 1571747519, nanoseconds: 521000000 } }
-// this.documentId = documentId;
-// return 0;
-//   } catch (err) {
-//     console.log(`Error: ${JSON.stringify(err)}`)
-// return 1;
-//   }
-// return 1;
-// },
-
-// 次画面にデータを送信する
-const viewsAppAlcorhythmResult = () => {
-  // タイマーの停止
-  clearInterval(timerIdForProgressTime);
-  clearInterval(timerIdForLatLng);
-
-  // 終了地点の緯度経度を最後に取得して格納
-  finish();
-}
-
-// TODO: いまはrouter機能でデータ渡してるが、firebaseDBにインサートする処理を設ける
-// if (this.setAlcorhythm()) {
-//   // error導線。ポップ出してトップ画面に遷移が無難かな
-// }
-// Router.push({
-//   name: 'AppAlcorhythmResult',
-//   params: {
-//     // documentId: this.documentId,
-//     latLng: this.latLng,
-//     title: this.title,
-//     message: this.message,
-//     startTime: this.startTime,
-//     progressTime: this.progressTime,
-//   }
-// });
-
-const debugFinish = () => {
-  latLng =  [{"lat":35.623047,"lng":139.720001},{"lat":35.623057,"lng":139.720042},{"lat":35.623067,"lng":139.720076},{"lat":35.623077,"lng":139.720230},{"lat":35.623087,"lng":139.720401},{"lat":35.623097,"lng":139.720501}];
-  viewsAppAlcorhythmResult();
+/** カウンター減算 */
+const decrementCounter = (counterTarget: string) => {
+  switch (counterTarget) {
+    case 'seveneleven':
+      --alcorhythm.count.seveneleven;
+      break;
+    case 'familymart':
+      --alcorhythm.count.familymart;
+      break;
+    case 'lawson':
+      --alcorhythm.count.lawson;
+      break;
+    defalut:
+      alert('incrementCounter unreachable code');
+      break;
+    }
 };
 </script>
 
@@ -229,7 +174,7 @@ img {
   font-size: 25px;
   margin-bottom: 10px;
 }
-.message {
+.description {
   font-size: 15px;
 }
 .time-block {

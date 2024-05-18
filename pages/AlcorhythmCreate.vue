@@ -24,16 +24,19 @@ const alcorhythm: IAlcorhythm = reactive({
     latlng: [],
     count: {
       seveneleven: 0,
-      lowson: 0,
+      lawson: 0,
       familymart: 0,
     },
     start_date: null,
+    start_time: null,
     end_date: null,
+    end_time: null,
 });
 const navigateToAction = () => {
   // TODO: 現場の情報のみでindexeddb.createRecordをawaitで実行し、idを取得する
   // alcorhythmId = createRecord(// alcorhythm);
   alcorhythm.start_date = generateDate();
+  alcorhythm.start_time = generateTime();
   createRecord(alcorhythm);
   const alcorhythmId = 1;
 
@@ -53,10 +56,14 @@ const generateDate = () => {
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
   const date = today.getDate();
+  return `${year}/${month}/${date}`;
+};
+const generateTime = () => {
+  const today = new Date();
   const hour = today.getHours();
   const minutes = today.getMinutes();
   const seconds = today.getSeconds();
-  return `${year}/${month}/${date} ${hour}:${minutes}:${seconds}`;
+  return `${hour}:${minutes}:${seconds}`;
 };
 </script>
 
