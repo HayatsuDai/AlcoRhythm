@@ -2,15 +2,15 @@
   <div class="app">
     <section class="contents">
       <div class="info">
-        <div class="title">{{ title }}</div>
-        <div class="message">{{ message }}</div>
+        <div class="title">{{ alcorhythm.title }}</div>
+        <div class="description">{{ alcorhythm.description }}</div>
       </div>
       <div class="hr-contents">
         <p class="hr-title">歩いた軌跡</p>
         <hr>
       </div>
       <!-- <google-maps
-        :lat-lng="latLng"
+        :lat-lng="alcorhythm.latLng"
         class="gmap"
       /> -->
       <div class="hr-contents">
@@ -18,11 +18,11 @@
         <hr>
       </div>
       <div>
-        開始時刻：{{ startTime }}<br>
-        終了時刻：{{ progressTime }}<br>
+        開始時刻：{{ alcorhythm.start_date }} {{ alcorhythm.start_time }}<br>
+        終了時刻：{{ alcorhythm.end_date }} {{ alcorhythm.end_time }}<br>
       </div>
       <ul id="sample">
-        <li v-for="item in latLng" :key="item.index">
+        <li v-for="(item, index) in alcorhythm.latlng" :key="index">
           lat:{{ item.lat }}, lng{{ item.lng }}
         </li>
       </ul>
@@ -34,54 +34,13 @@
 </template>
 
 <script setup lang="ts">
+import type { IAlcorhythm } from '~/types/IAlcorhythm';
 definePageMeta({
   path: "/history-detail"
 });
 
-const alcorhythmId = useRoute().query.alcorhythmId;
-console.log('alcorhythmId: ' + alcorhythmId);
-
-const latLng = [
-  {
-    lat: 0,
-    lng: 0,
-  },
-  {
-    lat: 0,
-    lng: 0,
-  },
-]
-const title = '';
-const message = '';
-const startTime = '';
-const progressTime = '';
-
-//   latLng : {
-//     type: Array,
-//     default: () => {},
-//     required: false,
-//   },
-//   title: {
-//     type: String,
-//     default: 'デフォルトタイトル',
-//     required: false // TODO: 仕様通りならtrueにしたい！
-//   },
-//   message: {
-//     type: String,
-//     default: '',
-//     required: false
-//   },
-//   startTime : {
-//     type: String,
-//     required: false,
-//     default: '--:--:--'
-//   },
-//   progressTime : {
-//     type: String,
-//     required: false,
-//     default: '--:--:--'
-//   }
-// };
+const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
+const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
 </script>
 
 <style scoped>
