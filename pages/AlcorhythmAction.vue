@@ -117,7 +117,7 @@ const finish = () => {
 
   const date = new Date();
   alcorhythm.end_date = date.toLocaleTimeString('en-GB');
-  alcorhythm.end_time = currentTime;
+  alcorhythm.end_time = currentTime.value;
 
   setLatLng(); // 最終位置を取得
   alcorhythm.latlng = latlng.value;

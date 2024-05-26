@@ -1,12 +1,12 @@
 <template>
   <div class="app">
       <section class="contents">
-        タイトル：{{ title }}<br>
-        メッセージ：{{ message }}<br>
-        開始時刻：{{ startTime }}<br>
-        終了時刻：{{ progressTime }}<br>
+        タイトル：{{ alcorhythm.title }}<br>
+        メッセージ：{{ alcorhythm.description }}<br>
+        開始時刻：{{ alcorhythm.start_date }} {{ alcorhythm.start_time }}<br>
+        終了時刻：{{ alcorhythm.end_date }} {{ alcorhythm.end_time }}<br>
         <ul id="sample">
-          <li v-for="(item, index) in latLng" :key="index">
+          <li v-for="(item, index) in alcorhythm.latlng" :key="index">
             lat:{{ item.lat }}, lng{{ item.lng }}
           </li>
         </ul>
@@ -19,10 +19,11 @@
 </template>
 
 <script setup lang="ts">
+import type { IAlcorhythm } from '~/types/IAlcorhythm';
+
 definePageMeta({
   path: "/result"
 });
-
 const navigateToHistoryDetail = () => {
   return navigateTo({
     path: '/history-detail',
@@ -31,78 +32,15 @@ const navigateToHistoryDetail = () => {
     }
   });
 };
-
 const navigateToTop = () => {
   return navigateTo({
     path: '/top'
   });
 };
 
-const alcorhythmId = useRoute().query.alcorhythmId;
-console.log('alcorhythmId: ' + alcorhythmId);
-const latLng = [
-  {
-    lat: 0,
-    lng: 0,
-  },
-  {
-    lat: 0,
-    lng: 0,
-  },
-]
-const title = '';
-const message = '';
-const startTime = '';
-const progressTime = '';
+const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
+const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
 
-// const navigateToHistoryDetail = () => {
-//   return navigateTo({
-//     path: '/history-detail',
-//     query: {
-//       alcorhythmId: 0 // TODO: IDを受け取りたい
-//     }
-//   });
-// };
-
-// latLng : {
-//   type: Array,
-//   default: () => {},
-//   required: false,
-// };
-// title: {
-//   type: String,
-//   default: 'デフォルトタイトル',
-//   required: false // TODO: 仕様通りならtrueにしたい！
-// };
-// message: {
-//   type: String,
-//   default: '',
-//   required: false
-// };
-// startTime : {
-//   type: String,
-//   required: false,
-//   default: '--:--:--'
-// };
-// progressTime : {
-//   type: String,
-//   required: false,
-//   default: '--:--:--'
-// };
-
-// TODO: いまはrouter機能でデータ渡してるが、データ格納はDBとかvuexに委ねたい
-// const viewsAppHistoryDetail = () => {
-//   Router.push({
-//     name: 'AppHistoryDetail',
-//     params: {
-//       latLng: this.latLng,
-//       title: this.title,
-//       message: this.message,
-//       startTime: this.startTime,
-//       progressTime: this.progressTime,
-//     }
-//   });
-// };
 </script>
 
 <style scoped>
