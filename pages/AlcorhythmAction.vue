@@ -67,7 +67,7 @@ const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
 const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
 
 /** 画面内の値 */
-let currentTime = ref<string>('');
+let currentTime = ref<string>('00:00:00');
 let currentTimerId: NodeJS.Timeout;
 let progressLatLngTimerId: NodeJS.Timeout;
 onMounted(() => {

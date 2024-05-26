@@ -20,6 +20,11 @@ export default defineNuxtConfig({
       script: [
         {
           src: 'https://unpkg.com/vue3-google-map',
+        },
+        {
+          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyAjy4gBUDMssn9maK03YocH_84WSDZzbMY`,
+          async: true,
+          defer: true
         }
       ]
     }

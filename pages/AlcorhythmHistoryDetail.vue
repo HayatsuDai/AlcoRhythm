@@ -9,10 +9,10 @@
         <p class="hr-title">歩いた軌跡</p>
         <hr>
       </div>
-      <!-- <google-maps
-        :lat-lng="alcorhythm.latLng"
+      <GoogleMaps
+        :lat-lng-list="alcorhythm.latlng"
         class="gmap"
-      /> -->
+      />
       <div class="hr-contents">
         <p class="hr-title">タイム</p>
         <hr>

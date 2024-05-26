@@ -1,9 +1,9 @@
 import { type IAlcorhythm } from "~/types/IAlcorhythm";
 
 const tmpLatlngList = [
-    {lat: 1.0, lng: 1.0},
-    {lat: 1.0, lng: 1.0},
-    {lat: 1.0, lng: 1.0},
+    { lat: 35.58362798834344, lng: 139.68490917546822 },
+    { lat: 35.57372798834444, lng: 139.67480917546722 },
+    { lat: 35.56382798834544, lng: 139.66470917546622 },
 ];
 const tmpCountObject = {
     seveneleven: 0,
