@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="container">
     <section class="contents">
       <div class="info">
         <div class="title">{{ alcorhythm.title }}</div>
@@ -27,9 +27,8 @@
         </li>
       </ul>
     </section>
-    <a href="/history">履歴一覧に戻る</a>
-    <br>
-    <a href="/top">トップ画面に戻る</a>
+    <button class="btn" @click="navigateToHistory">履歴一覧に戻る</button>
+    <button class="btn" @click="navigateToTop">トップ画面に戻る</button>
   </div>
 </template>
 
@@ -38,6 +37,16 @@ import type { IAlcorhythm } from '~/types/IAlcorhythm';
 definePageMeta({
   path: "/history-detail"
 });
+const navigateToHistory = () => {
+  return navigateTo({
+    path: '/history',
+  });
+};
+const navigateToTop = () => {
+  return navigateTo({
+    path: '/top',
+  });
+};
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
 const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));

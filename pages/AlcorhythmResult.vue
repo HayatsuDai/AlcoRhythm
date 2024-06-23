@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="container">
       <section class="contents">
         タイトル：{{ alcorhythm.title }}<br>
         メッセージ：{{ alcorhythm.description }}<br>
@@ -47,11 +47,11 @@ const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
 .btn {
   background-color: #FFF15F;
   width: 300px;
+  height: 70px;
   margin: 20px 30px;
-  padding: 10px 0px ;
+  padding: 10px 0px;
   color: #212529;
-  font-size: 18px;
-  border-radius: 0.5rem;
+  font-size: 20px;
   border-radius: 100vh;
 }
 </style>

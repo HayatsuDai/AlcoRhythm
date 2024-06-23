@@ -1,10 +1,10 @@
 <template>
-  <div class="app">
+  <div class="container">
       <section class="contents">
         <div class="info">
-          <div class="id">{{ alcorhythmId }}</div>
-          <div class="title">{{ alcorhythm.title }}</div>
-          <div class="description">{{ alcorhythm.description }}</div>
+          <div class="id">id: {{ alcorhythmId }}</div>
+          <div class="title">title: {{ alcorhythm.title }}</div>
+          <div class="description">desc: {{ alcorhythm.description }}</div>
         </div>
         <hr>
         <div class="time-block">
@@ -18,27 +18,35 @@
           </div>
         </div>
         <hr>
-        <div class="convenience">
-          <div class="icon" @click="incrementCounter('seveneleven')">
-            <div>{{ alcorhythm.count.seveneleven }}</div>
-            <img src="/icons/seveneleven.png">
-          </div>
-          <div @click="decrementCounter('seveneleven')">
-            <img src="/icons/minus_button.png" alt="minus_button">
-          </div>
-          <div class="icon" @click="incrementCounter('familymart')">
-            <div>{{ alcorhythm.count.familymart }}</div>
-            <img src="/icons/familymart.png">
-          </div>
-            <div @click="decrementCounter('familymart')">
+        <div class="convenience-container">
+          <div class="convenience-item">
+            <div class="icon" @click="incrementCounter('seveneleven')">
+              <div class="convinience-count">{{ alcorhythm.count.seveneleven }}</div>
+              <div><img src="/icons/seveneleven.png"></div>
+            </div>
+            <div class="minus-button" @click="decrementCounter('seveneleven')">
               <img src="/icons/minus_button.png" alt="minus_button">
             </div>
-          <div class="icon" @click="incrementCounter('lawson')">
-            <div>{{ alcorhythm.count.lawson }}</div>
-            <img src="/icons/lawson.png">
           </div>
-          <div @click="decrementCounter('lawson')">
-            <img src="/icons/minus_button.png" alt="minus_button">
+
+          <div class="convenience-item">
+            <div class="icon" @click="incrementCounter('familymart')">
+              <div class="convinience-count">{{ alcorhythm.count.familymart }}</div>
+              <div><img src="/icons/familymart.png"></div>
+            </div>
+            <div class="minus-button" @click="decrementCounter('familymart')">
+              <img src="/icons/minus_button.png" alt="minus_button">
+            </div>
+          </div>
+
+          <div class="convenience-item">
+            <div class="icon" @click="incrementCounter('lawson')">
+              <div class="convinience-count">{{ alcorhythm.count.lawson }}</div>
+              <div><img src="/icons/lawson.png"></div>
+            </div>
+            <div class="minus-button" @click="decrementCounter('lawson')">
+              <img src="/icons/minus_button.png" alt="minus_button">
+            </div>
           </div>
         </div>
         <button class="btn" @click="finish">アルコリズムを終了する</button>
@@ -48,11 +56,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
 import type { IAlcorhythm, latlng } from '~/types/IAlcorhythm';
 import { updateOrCreate } from '~/utils/indexeddb';
 definePageMeta({
-  path: "/action"
+  path: "/action",
+  layout: false,
 });
 const navigateToResult = () => {
   return navigateTo({
@@ -147,13 +155,19 @@ const incrementCounter = (counterTarget: string) => {
 const decrementCounter = (counterTarget: string) => {
   switch (counterTarget) {
     case 'seveneleven':
-      --alcorhythm.count.seveneleven;
+      if (alcorhythm.count.seveneleven > 0) {
+        --alcorhythm.count.seveneleven;
+      }
       break;
     case 'familymart':
-      --alcorhythm.count.familymart;
+      if (alcorhythm.count.familymart > 0) {
+        --alcorhythm.count.familymart;
+      }
       break;
     case 'lawson':
-      --alcorhythm.count.lawson;
+      if (alcorhythm.count.lawson > 0) {
+        --alcorhythm.count.lawson;
+      }
       break;
     defalut:
       alert('incrementCounter unreachable code');
@@ -168,7 +182,7 @@ img {
 }
 .info {
   width: 400px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 .title {
   font-size: 25px;
@@ -188,27 +202,29 @@ img {
 .timer {
   padding: 0 20px;
 }
-.convenience {
+.convenience-container {
   display: flex;
   justify-content: center;
 }
-.convenience * {
-  margin: 10px
+.convenience-item {
+  margin: 10px auto;
+}
+.convinience-count {
+  text-align: center;
 }
 hr {
   border: none;
   border-bottom: 3px solid #CC9900;
-  margin: 30px 0;
+  margin: 10px 0;
 }
 .btn {
   background-color: #FFF15F;
   width: 300px;
+  height: 70px;
   margin: 20px 30px;
-  padding: 10px 0px ;
+  padding: 10px 0px;
   color: #212529;
-  font-size: 18px;
-  border-radius: 0.5rem;
+  font-size: 20px;
   border-radius: 100vh;
 }
-
 </style>
