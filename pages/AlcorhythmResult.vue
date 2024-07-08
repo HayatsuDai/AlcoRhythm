@@ -5,7 +5,7 @@
         メッセージ：{{ alcorhythm.description }}<br>
         開始時刻：{{ alcorhythm.start_date }} {{ alcorhythm.start_time }}<br>
         終了時刻：{{ alcorhythm.end_date }} {{ alcorhythm.end_time }}<br>
-        <ul id="sample">
+        <ul>
           <li v-for="(item, index) in alcorhythm.latlng" :key="index">
             lat:{{ item.lat }}, lng{{ item.lng }}
           </li>
@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm } from '~/types/IAlcorhythm';
-
 definePageMeta({
   path: "/result"
 });
@@ -39,7 +38,8 @@ const navigateToTop = () => {
 };
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
-const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
+const tmp = await selectRecord(alcorhythmId);
+const alcorhythm = ref<IAlcorhythm>(tmp);
 
 </script>
 

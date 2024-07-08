@@ -49,7 +49,8 @@ const navigateToTop = () => {
 };
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
-const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
+const tmp = await selectRecord(alcorhythmId);
+const alcorhythm = ref<IAlcorhythm>(tmp);
 </script>
 
 <style scoped>

@@ -11,10 +11,13 @@
 </template>
 
 <script setup lang="ts">
+import type { IAlcorhythm } from '~/types/IAlcorhythm';
+
 definePageMeta({
   path: "/history"
 });
-const alcorhythmList = reactive(selectAllRecord());
+const tmp = await selectAllRecord();
+const alcorhythmList = ref<IAlcorhythm[]>(tmp);
 
 const navigateToTop = () => {
   return navigateTo({

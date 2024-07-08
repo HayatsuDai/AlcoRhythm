@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm, latlng } from '~/types/IAlcorhythm';
-import { updateOrCreate } from '~/utils/indexeddb';
+import { updateOrCreateRecord } from '~/utils/indexeddb';
 definePageMeta({
   path: "/action",
   layout: false,
@@ -72,12 +72,14 @@ const navigateToResult = () => {
 };
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
-const alcorhythm: IAlcorhythm = reactive(selectRecord(alcorhythmId));
+const tmp = await selectRecord(alcorhythmId);
+const alcorhythm = ref<IAlcorhythm>(tmp);
 
 /** 画面内の値 */
 let currentTime = ref<string>('00:00:00');
 let currentTimerId: NodeJS.Timeout;
 let progressLatLngTimerId: NodeJS.Timeout;
+
 onMounted(() => {
   console.log('init');
   // 経過時間の格納
@@ -124,26 +126,35 @@ const finish = () => {
   clearInterval(progressLatLngTimerId);
 
   const date = new Date();
-  alcorhythm.end_date = date.toLocaleTimeString('en-GB');
-  alcorhythm.end_time = currentTime.value;
+  alcorhythm.value.end_date = generateDate();
+  alcorhythm.value.end_time = currentTime.value;
 
   setLatLng(); // 最終位置を取得
-  alcorhythm.latlng = latlng.value;
-  updateOrCreate(alcorhythm); // アルコリズムの保存
+  alcorhythm.value.latlng = latlng.value;
+  updateOrCreateRecord(JSON.parse(JSON.stringify(alcorhythm.value)), alcorhythmId); // アルコリズムの保存
 
   return navigateToResult();
 };
+
+const generateDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const date = today.getDate();
+  return `${year}/${month}/${date}`;
+};
+
 /** カウンター加算 */
 const incrementCounter = (counterTarget: string) => {
   switch (counterTarget) {
     case 'seveneleven':
-      ++alcorhythm.count.seveneleven;
+      ++alcorhythm.value.count.seveneleven;
       break;
     case 'familymart':
-      ++alcorhythm.count.familymart;
+      ++alcorhythm.value.count.familymart;
       break;
     case 'lawson':
-      ++alcorhythm.count.lawson;
+      ++alcorhythm.value.count.lawson;
       break;
     defalut:
       alert('incrementCounter unreachable code');
@@ -155,18 +166,18 @@ const incrementCounter = (counterTarget: string) => {
 const decrementCounter = (counterTarget: string) => {
   switch (counterTarget) {
     case 'seveneleven':
-      if (alcorhythm.count.seveneleven > 0) {
-        --alcorhythm.count.seveneleven;
+      if (alcorhythm.value.count.seveneleven > 0) {
+        --alcorhythm.value.count.seveneleven;
       }
       break;
     case 'familymart':
-      if (alcorhythm.count.familymart > 0) {
-        --alcorhythm.count.familymart;
+      if (alcorhythm.value.count.familymart > 0) {
+        --alcorhythm.value.count.familymart;
       }
       break;
     case 'lawson':
-      if (alcorhythm.count.lawson > 0) {
-        --alcorhythm.count.lawson;
+      if (alcorhythm.value.count.lawson > 0) {
+        --alcorhythm.value.count.lawson;
       }
       break;
     defalut:

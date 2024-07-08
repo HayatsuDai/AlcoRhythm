@@ -3,9 +3,9 @@
     <section class="contents">
       <h1>アルコリズムを作成</h1>
       <h2>タイトルを入力する（必須）</h2>
-      <input type="text" v-model="alcorhythm.title">
+      <input type="text" v-model="alcorhythm.title" placeholder="タイトルを入力する">
       <h2>メッセージを入力する</h2>
-      <input type="text" class="text-area" v-model="alcorhythm.description">
+      <input type="text" class="text-area" v-model="alcorhythm.description" placeholder="メッセージを入力する">
       <button class="btn" @click="navigateToAction">アルコリズムを開始する</button>
     </section>
   </div>
@@ -17,24 +17,24 @@ definePageMeta({
   path: "/create",
 });
 
-const alcorhythm: IAlcorhythm = reactive({
-    title: 'sample',
-    description: 'sample',
+const alcorhythm = ref<IAlcorhythm>({
+    title: '',
+    description: '',
     latlng: [],
     count: {
       seveneleven: 0,
       lawson: 0,
       familymart: 0,
     },
-    start_date: null,
-    start_time: null,
-    end_date: null,
-    end_time: null,
+    start_date: "",
+    start_time: "",
+    end_date: "",
+    end_time: "",
 });
 /** 画面のバリデーションを実装 */
 let validationMsg = ref("");
-const viewValidate = (): boolean => {
-  if (!alcorhythm.title) {
+const hasValidError = (): boolean => {
+  if (!alcorhythm.value.title) {
     validationMsg.value = "タイトルを入力してください";
     return false;
   }
@@ -42,22 +42,18 @@ const viewValidate = (): boolean => {
   return true; // 正常終了
 }
 
-const navigateToAction = () => {
-  if (!viewValidate()) {
+/** Route操作 */
+const navigateToAction = async () => {
+  if (!hasValidError()) {
     alert(validationMsg.value);
     return;
   }
 
-  // TODO: 現場の情報のみでindexeddb.createRecordをawaitで実行し、idを取得する
-  // alcorhythmId = createRecord(// alcorhythm);
-  alcorhythm.start_date = generateDate();
-  alcorhythm.start_time = generateTime();
-  createRecord(alcorhythm);
-  const alcorhythmId = 1;
+  const date = new Date();
+  alcorhythm.value.start_date = generateDate();
+  alcorhythm.value.start_time = date.toLocaleTimeString('en-GB');
 
-  console.log('--- create alcorhythm var ---');
-  console.log(alcorhythm);
-  alert('go?');
+  const alcorhythmId = await createRecord(JSON.parse(JSON.stringify(alcorhythm.value)));
   return navigateTo({
     path: '/action',
     query: {
@@ -72,13 +68,6 @@ const generateDate = () => {
   const month = today.getMonth() + 1;
   const date = today.getDate();
   return `${year}/${month}/${date}`;
-};
-const generateTime = () => {
-  const today = new Date();
-  const hour = today.getHours();
-  const minutes = today.getMinutes();
-  const seconds = today.getSeconds();
-  return `${hour}:${minutes}:${seconds}`;
 };
 </script>
 

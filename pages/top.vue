@@ -24,34 +24,8 @@
   };
 
   onMounted(() => {
-    if (!('serviceWorker' in navigator)) {
-        alert('service worker not in navigator');
-        return;
-    }
-    /** キャッシュ設定 */
-    navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-        if (!registration) {
-            console.log('ない');
-            console.log(registration);
-            return;
-        }
-        registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            console.log('New Service Worker found, installing.');
-            if (!newWorker) {
-                return;
-            }
-        });
-    });
+    
   });
-  /** アプリ更新をユーザに通知する */
-  const notifyUserAboutUpdate = (worker: ServiceWorker) => {
-    let shouldUpdate = confirm('New version available. Refresh to update?');
-    if (shouldUpdate) {
-        worker.postMessage({ action: 'skipWaiting' });
-    }
-  }
-
 </script>
 
 <style scoped>
