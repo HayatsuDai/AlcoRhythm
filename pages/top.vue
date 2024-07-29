@@ -2,7 +2,7 @@
   <div class="center">
     <button class="btn" @click="navigateToCreate">アルコリズムを作成する</button>
     <button class="btn" @click="navigateToHistory">履歴をみる</button>
-    <button class="btn" @click="navigateToDebug">Debug画面</button>
+    <button v-if="isDebug" class="btn" @click="navigateToDebug">Debug画面</button>
   </div>
 </template>
 
@@ -23,8 +23,11 @@
     });
   };
 
+  const runtimeConfig = useRuntimeConfig();
+  const isDebug = runtimeConfig.public.appEnv === 'local';
+
   onMounted(() => {
-    
+
   });
 </script>
 
