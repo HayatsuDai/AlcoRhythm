@@ -49,7 +49,9 @@
             </div>
           </div>
         </div>
-        <button class="btn" @click="finish">アルコリズムを終了する</button>
+        <div class="button-container">
+          <button class="btn" @click="finish">アルコリズムを終了する</button>
+        </div>
         <!-- <button class="btn" @click="navigateToResult" style="background-color: #65e36f;">debug終了</button> -->
       </section>
   </div>
@@ -222,6 +224,10 @@ img {
 }
 .convinience-count {
   text-align: center;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
 }
 hr {
   border: none;

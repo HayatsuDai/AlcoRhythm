@@ -5,14 +5,16 @@
         <div class="title">{{ alcorhythm.title }}</div>
         <div class="description">{{ alcorhythm.description }}</div>
       </div>
-      <div class="hr-contents">
-        <p class="hr-title">歩いた軌跡</p>
-        <hr>
+      <div v-if="isOnline">
+        <div class="hr-contents">
+          <p class="hr-title">歩いた軌跡</p>
+          <hr>
+        </div>
+        <GoogleMaps
+          :lat-lng-list="alcorhythm.latlng"
+          class="gmap"
+        />
       </div>
-      <GoogleMaps
-        :lat-lng-list="alcorhythm.latlng"
-        class="gmap"
-      />
       <div class="hr-contents">
         <p class="hr-title">タイム</p>
         <hr>
@@ -51,6 +53,8 @@ const navigateToTop = () => {
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
 const tmp = await selectRecord(alcorhythmId);
 const alcorhythm = ref<IAlcorhythm>(tmp);
+
+const isOnline = navigator.onLine;
 </script>
 
 <style scoped>

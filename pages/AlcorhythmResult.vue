@@ -10,10 +10,14 @@
             lat:{{ item.lat }}, lng{{ item.lng }}
           </li>
         </ul>
-        <br>
-        <button class="btn" @click="navigateToHistoryDetail">詳細の履歴をみる</button>
-        <br>
-        <button class="btn" @click="navigateToTop">トップに戻る</button>
+        <div class="button-container">
+          <div>
+            <button class="btn" @click="navigateToHistoryDetail">詳細の履歴をみる</button>
+          </div>
+          <div>
+            <button class="btn" @click="navigateToTop">トップに戻る</button>
+          </div>
+        </div>
       </section>
   </div>
 </template>
@@ -44,6 +48,11 @@ const alcorhythm = ref<IAlcorhythm>(tmp);
 </script>
 
 <style scoped>
+.button-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
 .btn {
   background-color: #FFF15F;
   width: 300px;
