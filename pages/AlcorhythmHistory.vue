@@ -14,13 +14,24 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm } from '~/types/IAlcorhythm';
-
+import { initAlcorhythmData } from '~/utils/initAlcorhythmData';
 definePageMeta({
   path: "/history"
 });
-const tmp = await selectAllRecord();
-tmp.sort(historySortAlgo);
-const alcorhythmList = ref<IAlcorhythm[]>(tmp);
+
+const navigateToTop = () => {
+  return navigateTo({
+    path: '/top'
+  });
+};
+
+const alcorhythmList = ref<IAlcorhythm[]>([initAlcorhythmData]);
+
+onMounted(async () => {
+  const tmpList = await selectAllRecord();
+  tmpList.sort(historySortAlgo);
+  alcorhythmList.value = tmpList;
+});
 
 /**
  * 履歴表示のソートロジック
@@ -28,7 +39,7 @@ const alcorhythmList = ref<IAlcorhythm[]>(tmp);
  * @param first 
  * @param seccond 
  */
-function historySortAlgo(first: IAlcorhythm, seccond: IAlcorhythm) {
+ function historySortAlgo(first: IAlcorhythm, seccond: IAlcorhythm) {
  const dateForFirst = new Date(first.start_date! + " " + first.start_time!);
  const dateForSeccond = new Date(seccond.start_date! + " " + seccond.start_time!);
  
@@ -39,12 +50,6 @@ function historySortAlgo(first: IAlcorhythm, seccond: IAlcorhythm) {
  }
  return 0;
 }
-
-const navigateToTop = () => {
-  return navigateTo({
-    path: '/top'
-  });
-};
 </script>
 
 <style scoped>

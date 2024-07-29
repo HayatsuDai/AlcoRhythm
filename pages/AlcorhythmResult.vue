@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm } from '~/types/IAlcorhythm';
+import { initAlcorhythmData } from '~/utils/initAlcorhythmData';
 definePageMeta({
   path: "/result"
 });
@@ -42,9 +43,12 @@ const navigateToTop = () => {
 };
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
-const tmp = await selectRecord(alcorhythmId);
-const alcorhythm = ref<IAlcorhythm>(tmp);
+const alcorhythm = ref<IAlcorhythm>(initAlcorhythmData);
 
+onMounted(async () => {
+  const tmp = await selectRecord(alcorhythmId);
+  alcorhythm.value = tmp;
+});
 </script>
 
 <style scoped>

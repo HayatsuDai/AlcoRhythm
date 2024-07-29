@@ -13,24 +13,12 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm } from '~/types/IAlcorhythm';
+import { initAlcorhythmData } from '~/utils/initAlcorhythmData';
 definePageMeta({
   path: "/create",
 });
 
-const alcorhythm = ref<IAlcorhythm>({
-    title: '',
-    description: '',
-    latlng: [],
-    count: {
-      seveneleven: 0,
-      lawson: 0,
-      familymart: 0,
-    },
-    start_date: "",
-    start_time: "",
-    end_date: "",
-    end_time: "",
-});
+const alcorhythm = ref<IAlcorhythm>(initAlcorhythmData);
 /** 画面のバリデーションを実装 */
 let validationMsg = ref("");
 const hasValidError = (): boolean => {

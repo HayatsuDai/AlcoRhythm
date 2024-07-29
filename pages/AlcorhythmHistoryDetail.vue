@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm } from '~/types/IAlcorhythm';
+import { initAlcorhythmData } from '~/utils/initAlcorhythmData';
 definePageMeta({
   path: "/history-detail"
 });
@@ -51,10 +52,13 @@ const navigateToTop = () => {
 };
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
-const tmp = await selectRecord(alcorhythmId);
-const alcorhythm = ref<IAlcorhythm>(tmp);
-
-const isOnline = navigator.onLine;
+const alcorhythm = ref<IAlcorhythm>(initAlcorhythmData);
+const isOnline = ref();
+onMounted(async () => {
+  const tmp = await selectRecord(alcorhythmId);
+  alcorhythm.value = tmp;
+  isOnline.value = navigator.onLine;
+});
 </script>
 
 <style scoped>

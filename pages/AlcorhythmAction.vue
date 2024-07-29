@@ -60,6 +60,7 @@
 <script setup lang="ts">
 import type { IAlcorhythm, latlng } from '~/types/IAlcorhythm';
 import { updateOrCreateRecord } from '~/utils/indexeddb';
+import { initAlcorhythmData } from '~/utils/initAlcorhythmData';
 definePageMeta({
   path: "/action",
   layout: false,
@@ -74,16 +75,17 @@ const navigateToResult = () => {
 };
 
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
-const tmp = await selectRecord(alcorhythmId);
-const alcorhythm = ref<IAlcorhythm>(tmp);
+const alcorhythm = ref<IAlcorhythm>(initAlcorhythmData);
 
 /** 画面内の値 */
 let currentTime = ref<string>('00:00:00');
 let currentTimerId: NodeJS.Timeout;
 let progressLatLngTimerId: NodeJS.Timeout;
 
-onMounted(() => {
-  console.log('init');
+onMounted(async () => {
+  const tmp = await selectRecord(alcorhythmId);
+  alcorhythm.value = tmp;
+
   // 経過時間の格納
   currentTimerId = setInterval(setCurrentTime, 1000);
   // 緯度経度情報の格納(60秒/回)
