@@ -5,7 +5,7 @@
         <div class="title">{{ alcorhythm.title }}</div>
         <div class="description">{{ alcorhythm.description }}</div>
       </div>
-      <div v-if="isOnline">
+      <div v-if="isOnline || !isDebug">
         <div class="hr-contents">
           <p class="hr-title">歩いた軌跡</p>
           <hr>
@@ -28,9 +28,15 @@
           lat:{{ item.lat }}, lng{{ item.lng }}
         </li>
       </ul>
-    </section>
-    <button class="btn" @click="navigateToHistory">履歴一覧に戻る</button>
-    <button class="btn" @click="navigateToTop">トップ画面に戻る</button>
+    </section>      
+    <div class="button-container">
+      <div>
+        <button class="btn" @click="navigateToHistory">履歴一覧に戻る</button>
+      </div>
+      <div>
+        <button class="btn" @click="navigateToTop">トップ画面に戻る</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -54,6 +60,9 @@ const navigateToTop = () => {
 const alcorhythmId: number = Number(useRoute().query.alcorhythmId);
 const alcorhythm = ref<IAlcorhythm>(initAlcorhythmData);
 const isOnline = ref();
+const runtimeConfig = useRuntimeConfig();
+const isDebug = runtimeConfig.public.appEnv === 'local';
+
 onMounted(async () => {
   const tmp = await selectRecord(alcorhythmId);
   alcorhythm.value = tmp;
@@ -87,6 +96,11 @@ hr {
   border: none;
   border-bottom: 3px solid #CC9900;
   margin: 10px 0 30px 0;
+}
+.button-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 .btn {
   background-color: #FFF15F;
