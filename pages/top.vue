@@ -1,5 +1,5 @@
 <template>
-  <div class="center">
+  <div class="container center">
     <button class="btn" @click="navigateToCreate">アルコリズムを作成する</button>
     <button class="btn" @click="navigateToHistory">履歴をみる</button>
     <button v-if="isDebug" class="btn" @click="navigateToDebug">Debug画面</button>

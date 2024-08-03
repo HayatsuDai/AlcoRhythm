@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div>
       <label for="id">inputId</label><input type="number" v-model="inputId" name="id">
     </div>

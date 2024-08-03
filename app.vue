@@ -13,4 +13,7 @@
 body {
   margin: 0px;
 }
+.container {
+  margin: 20px;
+}
 </style>

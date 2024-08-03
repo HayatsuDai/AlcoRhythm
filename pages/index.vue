@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div class="container">
         <SplashScreen @click="redirect"></SplashScreen>
     </div>
 </template>

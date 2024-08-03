@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
       <section class="contents">
         <h1>アルコリズム履歴</h1>
         <div v-for="(alcorhythm, index) in alcorhythmList" :key="index">
