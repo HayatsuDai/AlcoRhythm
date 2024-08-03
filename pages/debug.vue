@@ -48,6 +48,10 @@
   const onClickUpdateOrCreate = async () => {
     await updateOrCreateRecord(JSON.parse(inputJson.value), inputId.value);
   }
+
+  onMounted(async () => {
+    console.log(await getAllRecordsWithKeys());
+  });
 </script>
 
 <style>

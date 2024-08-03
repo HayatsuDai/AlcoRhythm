@@ -3,7 +3,7 @@
       <section class="contents">
         <h1>アルコリズム履歴</h1>
         <div v-for="(alcorhythm, index) in alcorhythmList" :key="index">
-          <a :href="`/history-detail?alcorhythmId=${index}`">{{ alcorhythm.start_date }} {{ alcorhythm.start_time }} {{ alcorhythm.title }} </a>
+          <a :href="`/history-detail?alcorhythmId=${alcorhythm.key}`">{{ alcorhythm.value.start_date }} {{ alcorhythm.value.start_time }} {{ alcorhythm.value.title }} </a>
         </div>
         <div class="button-container">
           <button class="btn" @click="navigateToTop">トップに戻る</button>
@@ -14,7 +14,6 @@
 
 <script setup lang="ts">
 import type { IAlcorhythm } from '~/types/IAlcorhythm';
-import { initAlcorhythmData } from '~/utils/initAlcorhythmData';
 definePageMeta({
   path: "/history"
 });
@@ -25,10 +24,10 @@ const navigateToTop = () => {
   });
 };
 
-const alcorhythmList = ref<IAlcorhythm[]>([initAlcorhythmData]);
+const alcorhythmList = ref<{ key: IDBValidKey; value: IAlcorhythm }[]>([]);
 
 onMounted(async () => {
-  const tmpList = await selectAllRecord();
+  const tmpList = await getAllRecordsWithKeys();
   tmpList.sort(historySortAlgo);
   alcorhythmList.value = tmpList;
 });
@@ -39,9 +38,9 @@ onMounted(async () => {
  * @param first 
  * @param seccond 
  */
- function historySortAlgo(first: IAlcorhythm, seccond: IAlcorhythm) {
- const dateForFirst = new Date(first.start_date! + " " + first.start_time!);
- const dateForSeccond = new Date(seccond.start_date! + " " + seccond.start_time!);
+ function historySortAlgo(first: { key: IDBValidKey; value: IAlcorhythm }, seccond: { key: IDBValidKey; value: IAlcorhythm }) {
+ const dateForFirst = new Date(first.value.start_date! + " " + first.value.start_time!);
+ const dateForSeccond = new Date(seccond.value.start_date! + " " + seccond.value.start_time!);
  
  if (dateForFirst > dateForSeccond) {
   return -1;

@@ -18,7 +18,7 @@ export async function createRecord(alcorhythm: IAlcorhythm): Promise<number> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName, version);
         request.onerror = () => {
-            console.log('IndexedDB can not open for create');
+            reject();
         }
         request.onsuccess = () => {
             const db = request.result;
@@ -36,7 +36,7 @@ export async function createRecord(alcorhythm: IAlcorhythm): Promise<number> {
 export function updateOrCreateRecord(alcorhythm: IAlcorhythm, key: number): void {
     const request = indexedDB.open(dbName, version);
     request.onerror = () => {
-        console.log('IndexedDB can not open for updateOrCreate');
+        console.log('failed: update or create ');
     }
     request.onsuccess = () => {
         const db = request.result;
@@ -51,7 +51,7 @@ export const selectRecord = async (key: number): Promise<IAlcorhythm> => {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName, version);
         request.onerror = () => {
-            console.log('IndexedDB can not open for updateOrCreate');
+            reject();
         }
         request.onsuccess = () => {
             const db = request.result;
@@ -68,15 +68,12 @@ export const selectRecord = async (key: number): Promise<IAlcorhythm> => {
     });
 };
 
-/**
- * @param key
- * @returns alcorhythm[]
- */
+/** 全件取得 */
 export function selectAllRecord(): Promise<IAlcorhythm[]> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName, version);
         request.onerror = () => {
-            console.log('IndexedDB can not open for updateOrCreate');
+            reject();
         }
         request.onsuccess = () => {
             const db = request.result;
@@ -87,34 +84,41 @@ export function selectAllRecord(): Promise<IAlcorhythm[]> {
               resolve(getRequest.result);
             };
             getRequest.onerror = (error: any) => {
-              reject(getRequest.result);
+                reject();
             };
         }
     });
 }
 
-// 更新処理を実装する予定はない
-// export function updateRecord(key: number): void {
-//
-// }
 
-export function deleteRecord(key: number): void {
+/** 全件取得（AIkeyを含む） */
+export function getAllRecordsWithKeys(): Promise<{ key: IDBValidKey; value: IAlcorhythm }[]> {
+    return new Promise((resolve, reject) => {
+        // 返却用配列
+        const results: { key: IDBValidKey; value: IAlcorhythm }[] = [];
 
+        const request = indexedDB.open(dbName, version);
+        request.onerror = () => {
+            reject();
+        }
+        request.onsuccess = () => {
+            const db = request.result;
+            const transaction = db.transaction(tableName, 'readwrite');
+            const objectStore = transaction.objectStore(tableName);
+            const cursorRequest = objectStore.openCursor();
+            cursorRequest.onsuccess = (event) => {
+                const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+                if (cursor) {
+                    results.push({ key: cursor.key, value: cursor.value });
+                    cursor.continue();
+                } else {
+                    resolve(results);
+                }
+            };
+        }
+    });
 }
 
-/** IndexedDB nitialize */
-export function init() {
-    let db: IDBDatabase;
-    const dbName = 'AlcorhythmDB'
-    const tableName = 'Alcorhythm';
-    const version = 1;
-    const request: IDBOpenDBRequest = indexedDB.open(dbName, version);
-    request.onerror = (event) => {
-        alert('IndexedDB can not open for init');
-    }
-    request.onsuccess = () => {
-        db = request.result;
-        db.createObjectStore(tableName, {autoIncrement: true});
-        console.log('init onsuccess');
-    }
+export function deleteRecord(key: number): void {
+ // 今のところ実装の予定はない
 }
