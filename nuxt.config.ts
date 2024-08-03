@@ -1,12 +1,45 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+const { APP_ENV, GOOGLE_MAPS_API_KEY } = process.env;
 export default defineNuxtConfig({
-  modules: ['@vite-pwa/nuxt'],
+  modules: [
+    '@vite-pwa/nuxt',
+    '@nuxt/eslint',
+  ],
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      appEnv: APP_ENV,
+    },
+  },
+
+  eslint: {
+    config: {
+      stylistic: {
+        indent: 'tab',
+        semi: true,
+        // ...
+      }
+    }
+  },
+  app: {
+    head: {
+      title: "アルコリズム",
+      script: [
+        {
+          src: 'https://unpkg.com/vue3-google-map',
+        },
+        {
+          src: `https://maps.googleapis.com/maps/api/js?key=` + GOOGLE_MAPS_API_KEY,
+          async: true,
+          defer: true
+        }
+      ]
+    }
+  },
   pwa: {
     registerType: "autoUpdate",
     manifest: {
-      name: 'Nuxt Vite PWA',
-      short_name: 'NuxtVitePWA',
+      name: 'アルコリズム',
+      short_name: 'アルコリズム',
       theme_color: '#ffffff',
       icons: [
         {
