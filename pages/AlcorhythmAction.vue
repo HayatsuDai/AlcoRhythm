@@ -87,9 +87,11 @@ onMounted(async () => {
   alcorhythm.value = tmp;
 
   // 経過時間の格納
+  setCurrentTime();
   currentTimerId = setInterval(setCurrentTime, 1000);
   // 緯度経度情報の格納(60秒/回)
-  progressLatLngTimerId = setInterval(setLatLng, 60000);
+  setLatLng();
+  progressLatLngTimerId = setInterval(setLatLng, 5000);
 });
 
 /** 現在時刻タイマー */
@@ -100,17 +102,18 @@ const setCurrentTime = () => {
 
 const latlng = ref<latlng[]>([]);
 /** アルコリズムObjectに緯度経度を格納 */
-const setLatLng = async () => {
+const setLatLng = () => {
   if (!navigator.geolocation) {
     // TODO: sw.jsでオフライン時の挙動を担保したい
     alert('緯度経度が取得できませんでした');
     return;
   }
   navigator.geolocation.getCurrentPosition((pos) => {
-    latlng.value.push({
+    const newLocation: latlng = {
       lat: pos.coords.latitude,
       lng: pos.coords.longitude
-    });
+    };
+    latlng.value.push(newLocation);
   }, (error) => {
     console.error(error);
   });
